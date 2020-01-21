@@ -8,12 +8,21 @@ namespace Sample4
     {
         static async Task Main(string[] args)
         {
-
-            int fn(int input) { Console.WriteLine(input); return input + 1; }
+            var r = new Random();
+            async Task<int> fn(int input)
+            {
+                await Task.Delay(r.Next(100, 1000));
+                Console.WriteLine(input);
+                return input + 1;
+            }
 
             var step1 = new TransformBlock<int, int>(fn);
             var step2 = new TransformBlock<int, int>(fn);
-            var step3 = new ActionBlock<int>(i=> { });
+            var step3 = new ActionBlock<int>(i => { });
+
+
+            //step1.LinkTo(step2, new DataflowLinkOptions { PropagateCompletion = true });
+            //step2.LinkTo(step3, new DataflowLinkOptions { PropagateCompletion = true });
 
             step1.LinkTo(step2);
             step2.LinkTo(step3);
@@ -32,7 +41,7 @@ namespace Sample4
             });
             step1.Post(1);
             step1.Complete();
-            
+
             await step3.Completion;
             Console.WriteLine("done");
         }
