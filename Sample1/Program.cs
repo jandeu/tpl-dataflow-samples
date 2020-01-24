@@ -13,8 +13,9 @@ namespace Sample
             var actionBlock = new ActionBlock<string>(input =>
             {
                 Thread.Sleep(r.Next(100, 2000));
+                // await Task.Delay(r.Next(100, 2000));
                 Console.WriteLine($"Done: {input}, threadId: {Thread.CurrentThread.ManagedThreadId}");
-            }, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1, EnsureOrdered = true });
+            }, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 4, EnsureOrdered = true });
 
             for (int i = 0; i < 1000; i++)
             {
@@ -24,8 +25,6 @@ namespace Sample
                 Console.WriteLine($"Adding {msg}");
                 actionBlock.Post(msg);
             }
-
-            Console.WriteLine("action block input count: " + actionBlock.InputCount);
 
             while (true)
             {

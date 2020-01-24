@@ -9,19 +9,17 @@ namespace Sample
         static void Main(string[] args)
         {
             var buffer = new BufferBlock<int>();
+            buffer.Post(1);
+            buffer.Post(2);
+            buffer.Post(3);
 
-            for (int i = 1; i < 4; i++)
-            {
-                buffer.Post(i);
-            }
-
-            for (int i = 1; i < 4; i++)
-            {
-                Console.WriteLine("buffer: " + buffer.Receive());
-            }
+            Console.WriteLine("buffer: " + buffer.Receive());
+            Console.WriteLine("buffer: " + buffer.Receive());
+            Console.WriteLine("buffer: " + buffer.Receive());
 
             var broadcast = new BroadcastBlock<int>(i => i);
             broadcast.Post(1);
+
             Console.WriteLine("broadcast: " + broadcast.Receive());
             Console.WriteLine("broadcast: " + broadcast.Receive());
             Console.WriteLine("broadcast: " + broadcast.Receive());
